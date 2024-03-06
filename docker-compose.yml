@@ -1,0 +1,30 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:16.2-alpine3.19
+    container_name: postgres-alpine-16.2
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    command:
+      "postgres -c 'max_connections=500'"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes: 
+  pgadmin-data: {}
+  postgres_data: {}
